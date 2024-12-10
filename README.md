@@ -1,5 +1,11 @@
 # 最优化方法 大作业
 
+## 下载到本地
+```
+git clone https://github.com/chen-yy20/svm_proj.git
+cd svm_proj
+```
+
 ## 安装依赖
 ```
 pip install -r requirements.txt
