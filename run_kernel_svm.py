@@ -1,14 +1,12 @@
 import numpy as np
-
-from svm import LinearSVM, KernelSVM, NormSVM
+from svm import KernelSVM
 from data_loader import MNISTDataLoader
 from visualizer import visualize_predictions, visualize_decision_boundary
-
 
 def calculate_accuracy(y_true, y_pred):
     return np.mean(y_true == y_pred)
 
-def train_and_evaluate_svm(a, b, lr, epochs, visualize):
+def train_and_evaluate_kernel_svm(a, b, lr, epochs, kernel, gamma, visualize):
     # 初始化数据加载器
     loader = MNISTDataLoader(digits=[a, b], shuffle=True)
     
@@ -21,9 +19,10 @@ def train_and_evaluate_svm(a, b, lr, epochs, visualize):
     y_test = np.where(y_test == a, 1, -1)
     
     # 初始化SVM
-    svm = LinearSVM(learning_rate=lr, n_epochs=epochs)
+    svm = KernelSVM(learning_rate=lr, n_epochs=epochs, kernel=kernel, gamma=gamma)
     
     # 训练模型
+    print(f"Training Kernel SVM with {kernel} kernel...")
     svm.fit(X_train, y_train)
     
     # 计算训练集和测试集准确率
@@ -38,18 +37,20 @@ def train_and_evaluate_svm(a, b, lr, epochs, visualize):
     print(f"测试集准确率: {test_acc:.4f}")
     
     # 可视化
-    if visualize:
+    if False and visualize: # some bug happened when visualize kernel svm
         visualize_predictions(a, b, X_test, y_test, svm)
         print("正在可视化svm, 需要大约15s...")
-        # visualize_decision_boundary(a, b, X_train, y_train, svm, "Training Data Decision Boundary")
         visualize_decision_boundary(a, b, X_test, y_test, svm, "Test Data Decision Boundary")
     
     return svm
 
-
 if __name__ == "__main__":
-    # a,b: 需要分类的数字;
-    # lr: 学习率; 
-    # epochs: 轮数; 
-    # visualize: 是否可视化
-    trained_svm = train_and_evaluate_svm(a=4, b=9, lr=0.0001, epochs=100, visualize = True)
+    trained_svm = train_and_evaluate_kernel_svm(
+        a=4,               # 第一个数字
+        b=9,               # 第二个数字
+        lr=0.0001,         # 学习率
+        epochs=1,        # 训练轮数，核函数特别慢，1个epoch跑跑得了
+        kernel='linear',      # 核函数类型：'linear', 'rbf', 'poly'
+        gamma=0.1,         # RBF核参数
+        visualize=True     # 是否可视化
+    )
