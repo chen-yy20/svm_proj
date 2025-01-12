@@ -25,55 +25,6 @@ class LinearSVM:
         return np.sign(np.dot(X, self.w) + self.b)
     
 
-class xKernelSVM:
-    def __init__(self, kernel='rbf', learning_rate=0.01, n_epochs=100, gamma=1.0):
-        self.lr = learning_rate
-        self.n_epochs = n_epochs
-        self.kernel = kernel
-        self.gamma = gamma
-        self.alpha = None
-        self.b = None
-        self.X = None
-        self.y = None
-    
-    def _kernel_function(self, x1, x2):
-        if self.kernel == 'linear':
-            return np.dot(x1, x2)
-        elif self.kernel == 'rbf':
-            return np.exp(-self.gamma * np.sum((x1 - x2) ** 2))
-        elif self.kernel == 'poly':
-            return (np.dot(x1, x2) + 1) ** 2
-        else:
-            raise ValueError("Kernel not supported")
-    
-    def fit(self, X, y):
-        n_samples = X.shape[0]
-        self.X = X
-        self.y = y
-        self.alpha = np.zeros(n_samples)
-        self.b = 0
-        
-        for _ in tqdm(range(self.n_epochs), desc='Training Progress', ncols=100):
-            for i in range(n_samples):
-                kernel_sum = 0
-                for j in range(n_samples):
-                    kernel_sum += self.alpha[j] * y[j] * self._kernel_function(X[i], X[j])
-                
-                condition = y[i] * (kernel_sum + self.b) >= 1
-                if not condition:
-                    self.alpha[i] += self.lr
-                    self.b += self.lr * y[i]
-    
-    def predict(self, X_test):
-        y_pred = []
-        for x in X_test:
-            prediction = 0
-            for i in range(len(self.X)):
-                prediction += self.alpha[i] * self.y[i] * self._kernel_function(self.X[i], x)
-            prediction += self.b
-            y_pred.append(np.sign(prediction))
-        return np.array(y_pred)
-
 
 class NormSVM:
     def __init__(self, learning_rate=0.01, n_epochs=100, C=1.0):

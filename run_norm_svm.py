@@ -42,14 +42,31 @@ def train_and_evaluate_norm_svm(a, b, lr, epochs, C, visualize):
         print("正在可视化svm, 需要大约15s...")
         visualize_decision_boundary(a, b, X_test, y_test, svm, "Test Data Decision Boundary")
     
-    return svm
+    return train_acc,test_acc
 
 if __name__ == "__main__":
-    trained_svm = train_and_evaluate_norm_svm(
-        a=4,               # 第一个数字
-        b=9,               # 第二个数字
-        lr=0.0001,         # 学习率
-        epochs=100,        # 训练轮数
-        C=1.0,            # 正则化参数
-        visualize=True     # 是否可视化
-    )
+    train,test = train_and_evaluate_norm_svm(
+            a=4,               # 第一个数字
+            b=9,               # 第二个数字
+            lr=0.0001,         # 学习率
+            epochs=100,        # 训练轮数
+            C=91,            # 正则化参数
+            visualize=True     # 是否可视化
+        )
+    # train_acc=[]
+    # test_acc =[]
+    # for num in range(101,1000,10):
+    #     print("正则化参数为：",num)
+    #     train,test = train_and_evaluate_norm_svm(
+    #         a=4,               # 第一个数字
+    #         b=9,               # 第二个数字
+    #         lr=0.0001,         # 学习率
+    #         epochs=100,        # 训练轮数
+    #         C=num,            # 正则化参数
+    #         visualize=False     # 是否可视化
+    #     )
+    #     train_acc.append(train)
+    #     test_acc.append(test)
+    # print(train_acc)
+    # print(test_acc)
+    
